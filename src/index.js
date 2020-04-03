@@ -1,18 +1,36 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import App from './App';
+import { AppContainer } from 'react-hot-loader';
+import { Provider as BusProvider } from './hooks/useBus';
+
+// redux
+import { Provider } from 'react-redux';
+import store from './redux';
+
+// styles
 import './index.css';
 import 'antd/dist/antd.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import './styles/index.scss';
+import './assets/iconfont/iconfont';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const render = Component => {
+	ReactDOM.render(
+		<AppContainer>
+			<BusProvider>
+				<Provider store={store}>
+					<Component />
+				</Provider>
+			</BusProvider>
+		</AppContainer>,
+		document.getElementById('root')
+	);
+};
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+render(App);
+
+if (module.hot) {
+	module.hot.accept('./App', () => {
+		render(App);
+	});
+}
