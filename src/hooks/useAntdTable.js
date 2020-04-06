@@ -11,100 +11,94 @@ import useMount from './useMount';
  */
 
 export default function useAntdTable({
-	requestUrl = '',
-	queryParams = null,
-	columns = [],
-	isAdmin = true
+  requestUrl = '',
+  queryParams = null,
+  columns = [],
+  isAdmin = true,
 }) {
-	const [loading, setLoading] = useState(false);
-	const [dataList, setDataList] = useState([]);
-	const [tablePagination, setTablePagination] = useState({ current: 1, pageSize: 10, totoal: 0 });
+  const [loading, setLoading] = useState(false);
+  const [dataList, setDataList] = useState([]);
+  const [tablePagination, setTablePagination] = useState({ current: 1, pageSize: 10, totoal: 0 });
 
-	useMount(fetchListWithLoading);
+  useMount(fetchListWithLoading);
 
-	function fetchDataList(params) {
-		const requestParams = {
-			page: tablePagination.current,
-			pageSize: tablePagination.pageSize,
-			...queryParams,
-			...params
-		};
+  function fetchDataList(params) {
+    const requestParams = {
+      page: tablePagination.current,
+      size: tablePagination.pageSize,
+      ...queryParams,
+      ...params,
+    };
 
-		$axios
-			.get(requestUrl, { params: requestParams })
-			.then(res => {
-				const { page, pageSize } = requestParams;
-				const { count, list } = res;
+    $axios
+      .post(requestUrl, { params: requestParams }, { needCheck: true })
+      .then((res) => {
+        const { data, totalSize, currentPage } = res;
 
-				if (count > 0 && count > pageSize) {
-					const totalPage = Math.ceil(count / pageSize);
-					if (totalPage < page) return fetchDataList({ page: totalPage }); // 例如 删除了列表里只有一项且删除，则需要跳转回前一页 也即最后一页
-				}
+        tablePagination.current = currentPage;
+        tablePagination.total = totalSize;
+        setTablePagination({ ...tablePagination }); // 设置分页
+        setDataList(data);
+        setLoading(false);
+        console.log('%c useAntdTabled', 'background: yellow', requestParams, data);
+      })
+      .catch((error) => {
+        console.log('fetchDataList error: ', requestParams, error);
+        setLoading(false);
+      });
+  }
 
-				tablePagination.current = page;
-				tablePagination.total = count;
-				setTablePagination({ ...tablePagination }); // 设置分页
-				setDataList(list);
-				setLoading(false);
-				console.log('%c useAntdTabled', 'background: yellow', requestParams, list);
-			})
-			.catch(error => {
-				console.log('fetchDataList error: ', requestParams, error);
-				setLoading(false);
-			});
-	}
+  async function fetchListWithLoading(params) {
+    setLoading(true);
+    fetchDataList(params);
+  }
 
-	async function fetchListWithLoading(params) {
-		setLoading(true);
-		// fetchDataList(params);
-	}
+  async function updateList(func) {
+    try {
+      setLoading(true);
+      await func();
+      fetchDataList();
+    } catch (error) {
+      console.log('updateList error: ', error);
+      setLoading(false);
+    }
+  }
 
-	async function updateList(func) {
-		try {
-			setLoading(true);
-			await func();
-			fetchDataList();
-		} catch (error) {
-			console.log('updateList error: ', error);
-			setLoading(false);
-		}
-	}
+  /**
+   * 分页、排序、筛选变化时触发
+   * 注意 当前只封装分页
+   */
+  function handleTableChange(pagination, filters, sorter) {
+    if (JSON.stringify(filters) === '{}' && JSON.stringify(sorter) === '{}') {
+      fetchListWithLoading({ page: pagination.current });
+    }
+  }
 
-	/**
-	 * 分页、排序、筛选变化时触发
-	 * 注意 当前只封装分页
-	 */
-	function handleTableChange(pagination, filters, sorter) {
-		if (JSON.stringify(filters) === '{}' && JSON.stringify(sorter) === '{}') {
-			fetchListWithLoading({ page: pagination.current });
-		}
-	}
+  /**
+   * 检索功能
+   */
+  function onSearch(params) {
+    fetchListWithLoading({ page: 1, ...params });
+  }
 
-	/**
-	 * 检索功能
-	 */
-	function onSearch(params) {
-		fetchListWithLoading({ page: 1, ...params });
-	}
-
-	return {
-		tableProps: {
-			className: isAdmin ? 'admin-table' : '',
-			rowKey: 'id',
-			loading,
-			columns,
-			dataSource: dataList,
-			pagination: {
-				current: tablePagination.current,
-				pageSize: tablePagination.pageSize,
-				total: tablePagination.total,
-				showTotal: total => `共 ${total} 条`
-			},
-			onChange: handleTableChange
-		},
-		dataList,
-		updateList: useCallback(updateList, [tablePagination, queryParams]), // 进行 action 操作 比如删除修改数据后获取数据 @example updateList(() => { return axios.put('xxxx') })
-		onSearch: useCallback(onSearch, [tablePagination, queryParams]),
-		setLoading: useCallback(setLoading, [])
-	};
+  return {
+    tableProps: {
+      className: isAdmin ? 'admin-table' : '',
+      rowKey: 'id',
+      loading,
+      columns,
+      dataSource: dataList,
+      pagination: {
+        current: tablePagination.current,
+        pageSize: tablePagination.pageSize,
+        total: tablePagination.total,
+        showTotal: (total) => `共 ${total} 条`,
+      },
+      onChange: handleTableChange,
+    },
+    dataList,
+    updateList: useCallback(updateList, [tablePagination, queryParams]), // 进行 action 操作 比如删除修改数据后获取数据 @example updateList(() => { return axios.put('xxxx') })
+    onSearch: useCallback(onSearch, [tablePagination, queryParams]),
+    setLoading: useCallback(setLoading, []),
+  };
 }
