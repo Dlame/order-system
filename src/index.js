@@ -11,26 +11,26 @@ import store from './redux';
 // styles
 import './index.css';
 import 'antd/dist/antd.css';
-import './styles/index.scss';
+import './styles/index.less';
 import './assets/iconfont/iconfont';
 
-const render = Component => {
-	ReactDOM.render(
-		<AppContainer>
-			<BusProvider>
-				<Provider store={store}>
-					<Component />
-				</Provider>
-			</BusProvider>
-		</AppContainer>,
-		document.getElementById('root')
-	);
+const render = (Component) => {
+  ReactDOM.render(
+    <AppContainer>
+      <BusProvider>
+        <Provider store={store}>
+          <Component />
+        </Provider>
+      </BusProvider>
+    </AppContainer>,
+    document.getElementById('root')
+  );
 };
 
 render(App);
 
 if (module.hot) {
-	module.hot.accept('./App', () => {
-		render(App);
-	});
+  module.hot.accept('./App', () => {
+    render(App);
+  });
 }

@@ -11,8 +11,8 @@
     "@testing-library/user-event": "^7.1.2",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
     "@typescript-eslint/parser": "^2.10.0",
-    "antd": "^4.1.0",
-    "axios": "^0.19.2",
+    "antd": "3.26.6",
+    "axios": "0.18.1",
     "babel-eslint": "10.1.0",
     "babel-jest": "^24.9.0",
     "babel-loader": "8.1.0",
@@ -22,7 +22,6 @@
     "camelcase": "^5.3.1",
     "case-sensitive-paths-webpack-plugin": "2.3.0",
     "css-loader": "3.4.2",
-    "dayjs": "^1.8.23",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
     "eslint": "^6.6.0",
@@ -41,6 +40,7 @@
     "jest-environment-jsdom-fourteen": "1.0.1",
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.2",
+    "md5": "^2.2.1",
     "mini-css-extract-plugin": "0.9.0",
     "mitt": "^1.2.0",
     "node-sass": "^4.13.1",
@@ -57,13 +57,13 @@
     "react-dom": "^16.13.1",
     "react-hot-loader": "^4.12.20",
     "react-redux": "^7.2.0",
+    "react-responsive": "^8.0.3",
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "resolve": "1.15.0",
     "resolve-url-loader": "3.1.1",
-    "sass-loader": "8.0.2",
-    "scss": "^0.2.4",
+    "sass-loader": "^8.0.2",
     "semver": "6.3.0",
     "style-loader": "0.23.1",
     "terser-webpack-plugin": "2.3.5",
@@ -145,6 +145,9 @@
     ]
   },
   "devDependencies": {
+    "@hot-loader/react-dom": "^16.13.0",
+    "less": "^3.11.1",
+    "less-loader": "^5.0.0",
     "redux-devtools-extension": "^2.13.8"
   }
 }

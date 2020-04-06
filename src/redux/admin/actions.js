@@ -9,15 +9,8 @@ export const login = (params) => {
         type: USER_LOGIN,
         payload: res,
       });
-      message.success(`登录成功, 欢迎您 ${res.username}`);
+      message.success('登录成功, 欢迎您');
       return res;
-    });
-};
-
-export const register = (params) => {
-  return (dispatch) =>
-    $axios.post('/register', params).then((res) => {
-      message.success('注册成功，请重新登录您的账号！');
     });
 };
 

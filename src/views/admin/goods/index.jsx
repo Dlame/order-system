@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, Input, Form, Button, Popconfirm, DatePicker, Divider } from 'antd';
+import GoodsModal from '@/components/GoodsModal';
 import locale from 'antd/es/date-picker/locale/zh_CN';
-import UserModal from '@/components/UserModal';
 
 import { $axios } from '@/utils/interceptor';
 import moment from 'moment';
@@ -10,23 +10,26 @@ import 'moment/locale/zh-cn';
 import useAntdTable from '@/hooks/useAntdTable';
 import useBreadcrumb from '@/hooks/useBreadcrumb';
 
-function UserManage(props) {
-  useBreadcrumb(['用户管理']);
+function GoodsManage(props) {
+  useBreadcrumb(['商品管理']);
+  const { getFieldDecorator } = props.form;
   const [queryParams, setQueryParams] = useState({});
   const [modalType, setModalType] = useState('');
-  const [visible, setVisible] = useState(0);
+  const [visible, setVisible] = useState(false);
   const [record, setRecord] = useState({});
-  const { getFieldDecorator } = props.form;
 
   const { tableProps, updateList, onSearch } = useAntdTable({
-    requestUrl: '/adm/token/GosUser/query',
+    requestUrl: '/adm/token/GosGoods/query',
     queryParams,
     columns: [
-      { title: '用户ID', dataIndex: 'id' },
-      { title: '用户姓名', dataIndex: 'name' },
-      { title: '登录邮箱', dataIndex: 'loginEmail' },
-      { title: '手机号码', dataIndex: 'phone' },
-      { title: '用户头像', dataIndex: 'headUrl' },
+      { title: '商品id', dataIndex: 'id' },
+      { title: '商品名称', dataIndex: 'name' },
+      { title: '商品图片', dataIndex: 'logoUrl' },
+      { title: '商品简介', dataIndex: 'introduce' },
+      { title: '商品数量', dataIndex: 'restNum' },
+      { title: '商品价格', dataIndex: 'price' },
+      { title: '商品销量', dataIndex: 'costs' },
+      { title: '商家名称', dataIndex: 'shopName' },
       {
         title: '创建时间',
         dataIndex: 'createTime',
@@ -40,14 +43,13 @@ function UserManage(props) {
       {
         title: '备注',
         dataIndex: 'remark',
-        editable: true,
       },
       {
         title: '操作',
         render: (text, record) => {
           return (
             <>
-              <a onClick={() => showModal('编辑', 1, record)}>编辑</a>
+              <a onClick={() => showModal('编辑', true, record)}>编辑</a>
               <Divider type="vertical" />
               <Popconfirm
                 title="确定删除？"
@@ -72,13 +74,13 @@ function UserManage(props) {
     setRecord(record);
   }
 
-  // 条件查询
-  function handleSearch(e) {
+  function handleSubmit(e) {
     e.preventDefault();
-    props.form.validateFields(['search'], (err, values) => {
+    props.form.validateFields((err, values) => {
+      console.log(values);
       if (!err) {
-        if (Array.isArray(values.rangeDate)) {
-          values.rangeDate = values.rangeDate.map((m) => m.format('YYYY-MM-DD'));
+        if (Array.isArray(values.createdTime)) {
+          values.createdTime = values.createdTime.map((m) => m.format('YYYY-MM-DD'));
         }
         setQueryParams({ ...queryParams, ...values });
         onSearch({ ...queryParams, ...values });
@@ -89,12 +91,12 @@ function UserManage(props) {
   return (
     <>
       {/* 检索 */}
-      <Form layout="inline" name="search" onSubmit={handleSearch} style={{ marginBottom: 20 }}>
-        <Form.Item label="姓名">
-          {getFieldDecorator('username')(<Input placeholder="请输入姓名" allowClear />)}
+      <Form layout="inline" onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
+        <Form.Item label="商品名">
+          {getFieldDecorator('keyword')(<Input placeholder="请输入文章关键词" allowClear />)}
         </Form.Item>
 
-        <Form.Item label="创建日期" name="createdTime">
+        <Form.Item label="创建日期">
           {getFieldDecorator('createdTime')(<DatePicker.RangePicker locale={locale} />)}
         </Form.Item>
 
@@ -102,21 +104,22 @@ function UserManage(props) {
           <Button type="default" htmlType="submit" style={{ marginRight: 8 }}>
             检索
           </Button>
-          <Button type="primary" onClick={() => showModal('新建', 1, {})}>
-            新建用户
+          <Button type="primary" onClick={() => showModal('新建', true, {})}>
+            新建商品
           </Button>
         </Form.Item>
       </Form>
-      <UserModal
+
+      <Table {...tableProps} />
+
+      <GoodsModal
         modalType={modalType}
         visible={visible}
         record={record}
         onCancel={() => setVisible(false)}
       />
-
-      <Table {...tableProps} />
     </>
   );
 }
 
-export default Form.create()(UserManage);
+export default Form.create()(GoodsManage);
