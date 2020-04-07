@@ -16,20 +16,10 @@ function UserInfo(props) {
   const dispatch = useDispatch();
   const bus = useBus();
   const userInfo = useSelector(state => state.user);
-  const { username, role } = userInfo;
+  const { name } = userInfo;
 
   const MenuOverLay = (
     <Menu>
-      {role === 1 && (
-        <Menu.Item>
-          <span onClick={e => bus.emit('openUploadModal')}></span>
-        </Menu.Item>
-      )}
-      {role === 1 && (
-        <Menu.Item>
-          <span onClick={e => props.history.push('/admin')}>后台管理</span>
-        </Menu.Item>
-      )}
       <Menu.Item>
         <span className="user-logout" onClick={e => dispatch(loginout())}>
           退出登录
@@ -40,7 +30,7 @@ function UserInfo(props) {
 
   return (
     <div className="header-userInfo">
-      {username ? (
+      {name ? (
         <Dropdown placement="bottomCenter" overlay={MenuOverLay} trigger={['click', 'hover']}>
           <div style={{ height: 55 }}>
             <AppAvatar userInfo={userInfo} popoverVisible={false} />

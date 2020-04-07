@@ -7,7 +7,7 @@ import 'moment/locale/zh-cn';
 
 function CreateUser(props) {
   const { modalType, record, visible } = props;
-  const { getFieldDecorator } = props.form;
+  const { getFieldDecorator, setFieldsValue } = props.form;
   // 表单样式
   const formItemLayout = {
     labelCol: {
@@ -22,11 +22,20 @@ function CreateUser(props) {
 
   useEffect(() => {
     if (modalType === '编辑') {
-      let initValue = {};
+      let initValue = {
+        id: '',
+        name: '',
+        loginEmail: '',
+        phone: '',
+        headUrl: '',
+        remark: '',
+      };
       for (const key in record) {
-        initValue[key] = {
-          value: record[key],
-        };
+        if (initValue.hasOwnProperty(key)) {
+          initValue[key] = {
+            value: record[key],
+          };
+        }
       }
       props.form.setFields(initValue);
     } else {
@@ -93,18 +102,8 @@ function CreateUser(props) {
             <Form.Item label="用户头像">
               {getFieldDecorator('headUrl', {
                 rules: [{ required: true, message: '请上传用户头像' }],
-              })(<ImageUploader />)}
+              })(<ImageUploader onChange={setFieldsValue} />)}
             </Form.Item>
-            {modalType === '编辑' && (
-              <>
-                <Form.Item label="创建时间">
-                  {getFieldDecorator('createTime')(<Input disabled />)}
-                </Form.Item>
-                <Form.Item label="修改时间">
-                  {getFieldDecorator('updateTime')(<Input disabled />)}
-                </Form.Item>
-              </>
-            )}
             <Form.Item label="备注">
               {getFieldDecorator('remark')(<Input placeholder="请输入备注" />)}
             </Form.Item>

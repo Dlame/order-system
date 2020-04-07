@@ -26,7 +26,17 @@ function UserManage(props) {
       { title: '用户姓名', dataIndex: 'name' },
       { title: '登录邮箱', dataIndex: 'loginEmail' },
       { title: '手机号码', dataIndex: 'phone' },
-      { title: '用户头像', dataIndex: 'headUrl' },
+      {
+        title: '用户头像',
+        dataIndex: 'headUrl',
+        render: (text, record) => {
+          return text && text.indexOf('http') ? (
+            <span></span>
+          ) : (
+            <img alt={record.name} src={text} style={{ width: 50, height: 50 }} />
+          );
+        },
+      },
       {
         title: '创建时间',
         dataIndex: 'createTime',
@@ -77,11 +87,15 @@ function UserManage(props) {
     e.preventDefault();
     props.form.validateFields(['search'], (err, values) => {
       if (!err) {
-        if (Array.isArray(values.rangeDate)) {
-          values.rangeDate = values.rangeDate.map((m) => m.format('YYYY-MM-DD'));
+        let param = values;
+        if (Array.isArray(values.createdTime)) {
+          values.createdTime = values.createdTime.map((m) => m.format('YYYY-MM-DD HH:mm:ss'));
+          param.startTime = values.createdTime[0];
+          param.endTime = values.createdTime[1];
+          delete param.createdTime;
         }
-        setQueryParams({ ...queryParams, ...values });
-        onSearch({ ...queryParams, ...values });
+        setQueryParams({ ...queryParams, ...param });
+        onSearch({ ...queryParams, ...param });
       }
     });
   }
@@ -91,11 +105,11 @@ function UserManage(props) {
       {/* 检索 */}
       <Form layout="inline" name="search" onSubmit={handleSearch} style={{ marginBottom: 20 }}>
         <Form.Item label="姓名">
-          {getFieldDecorator('username')(<Input placeholder="请输入姓名" allowClear />)}
+          {getFieldDecorator('name')(<Input placeholder="请输入姓名" allowClear />)}
         </Form.Item>
 
         <Form.Item label="创建日期" name="createdTime">
-          {getFieldDecorator('createdTime')(<DatePicker.RangePicker locale={locale} />)}
+          {getFieldDecorator('createdTime')(<DatePicker.RangePicker showTime locale={locale} />)}
         </Form.Item>
 
         <Form.Item>

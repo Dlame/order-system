@@ -7,7 +7,8 @@ import CommonComponent from '@/components/common';
 import routes from './routes';
 
 function App() {
-  const token = useSelector((state) => state.admin.token);
+  const adminToken = useSelector((state) => state.admin.token);
+  const userToken = useSelector((state) => state.user.token);
 
   const renderRoutes = (routes, contextPath) => {
     const children = [];
@@ -16,10 +17,21 @@ function App() {
       let newContextPath = item.path ? `${routeContextPath}/${item.path}` : routeContextPath;
       newContextPath = newContextPath.replace(/\/+/g, '/');
       // 未登录
-      if (newContextPath.includes('admin') && !token) {
+      if (newContextPath.includes('admin') && !adminToken) {
         item = {
           ...item,
           component: () => <Redirect to="/login" />,
+          children: [],
+        };
+      }
+      // 未登录
+      if (
+        (newContextPath.includes('orders') || newContextPath.includes('shoppingCart')) &&
+        !userToken
+      ) {
+        item = {
+          ...item,
+          component: () => <Redirect to="/" />,
           children: [],
         };
       }

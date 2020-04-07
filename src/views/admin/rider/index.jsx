@@ -42,11 +42,28 @@ function RiderManage(props) {
       { title: '骑手姓名', dataIndex: 'name' },
       { title: '登陆邮箱', dataIndex: 'loginEmail' },
       { title: '手机号码', dataIndex: 'phone' },
-      { title: '骑手头像', dataIndex: 'headUrl' },
+      {
+        title: '骑手头像',
+        dataIndex: 'headUrl',
+        render: (text, record) => {
+          return text && text.indexOf('http') ? (
+            <span></span>
+          ) : (
+            <img alt={record.name} src={text} style={{ width: 50, height: 50 }} />
+          );
+        },
+      },
       { title: '历史接单量', dataIndex: 'historyOrders' },
       { title: '历史接单收益', dataIndex: 'historyIncome' },
       // { title: '每单价格', dataIndex: 'email' },
-      { title: '管辖街道', dataIndex: 'addressStreet' },
+      {
+        title: '管辖街道',
+        dataIndex: 'addressStreet',
+        render: (text, record) => {
+          const status = streetList.find((v) => text === v.value);
+          return status.label || '未知';
+        },
+      },
       {
         title: '骑手状态',
         dataIndex: 'riderStatus',
@@ -79,7 +96,7 @@ function RiderManage(props) {
               title="确定删除？"
               onConfirm={(e) =>
                 updateList(() => {
-                  return $axios.delete(`/user/${text.id}`);
+                  return $axios.delete(`/adm/token/GosRider/delete/${record.id}`);
                 })
               }
             >
@@ -101,12 +118,15 @@ function RiderManage(props) {
     e.preventDefault();
     props.form.validateFields((err, values) => {
       if (!err) {
+        let param = values;
         if (Array.isArray(values.createdTime)) {
-          values.createdTime = values.createdTime.map((m) => m.format('YYYY-MM-DD'));
+          values.createdTime = values.createdTime.map((m) => m.format('YYYY-MM-DD HH:mm:ss'));
+          param.startTime = values.createdTime[0];
+          param.endTime = values.createdTime[1];
+          delete param.createdTime;
         }
-        console.log(values);
-        setQueryParams({ ...queryParams, ...values });
-        onSearch({ ...queryParams, ...values });
+        setQueryParams({ ...queryParams, ...param });
+        onSearch({ ...queryParams, ...param });
       }
     });
   }
@@ -116,15 +136,11 @@ function RiderManage(props) {
       {/* 检索 */}
       <Form layout="inline" onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
         <Form.Item label="姓名">
-          {getFieldDecorator('username')(<Input placeholder="请输入骑手姓名" allowClear />)}
-        </Form.Item>
-
-        <Form.Item label="创建日期">
-          {getFieldDecorator('createdTime')(<DatePicker.RangePicker locale={locale} />)}
+          {getFieldDecorator('name')(<Input placeholder="请输入骑手姓名" allowClear />)}
         </Form.Item>
 
         <Form.Item label="管辖街道">
-          {getFieldDecorator('street')(
+          {getFieldDecorator('addressStreet')(
             <Select style={{ width: 200 }} allowClear>
               {streetList.map((item) => (
                 <Select.Option key={item.value} value={item.value}>
@@ -136,7 +152,7 @@ function RiderManage(props) {
         </Form.Item>
 
         <Form.Item label="骑手状态">
-          {getFieldDecorator('status')(
+          {getFieldDecorator('riderStatus')(
             <Select style={{ width: 200 }} allowClear>
               {riderStatusList.map((item) => (
                 <Select.Option key={item.value} value={item.value}>
@@ -145,6 +161,10 @@ function RiderManage(props) {
               ))}
             </Select>
           )}
+        </Form.Item>
+
+        <Form.Item label="创建日期">
+          {getFieldDecorator('createdTime')(<DatePicker.RangePicker showTime locale={locale} />)}
         </Form.Item>
 
         <Form.Item>

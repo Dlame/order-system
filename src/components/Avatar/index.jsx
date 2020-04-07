@@ -3,22 +3,18 @@ import PropTypes from 'prop-types';
 import './index.less';
 
 // components
-import Href from '../Href';
-import { Avatar, Popover, Icon, Typography } from 'antd';
-import SvgIcon from '../SvgIcon';
+import { Avatar, Popover } from 'antd';
 
-const { Text } = Typography;
-
-const AvatarComponent = ({ username, github, role }) => {
+const AvatarComponent = ({ username, headUrl }) => {
   let avatarSrc = '';
-  if (github && github.avatar_url) avatarSrc = github.avatar_url;
+  if (headUrl) avatarSrc = headUrl;
   return <Avatar src={avatarSrc}>{username}</Avatar>;
 };
 
-const AppAvatar = props => {
-  const { role, username, github } = props.userInfo;
-  if (!github || !props.popoverVisible) {
-    return <AvatarComponent role={role} github={github} username={username} />;
+const AppAvatar = (props) => {
+  const { name, headUrl } = props.userInfo;
+  if (!headUrl || !props.popoverVisible) {
+    return <AvatarComponent headUrl={headUrl} name={name} />;
   }
   return (
     <Popover
@@ -27,50 +23,17 @@ const AppAvatar = props => {
       trigger="hover"
       // placement='right'
       placement="topLeft"
-      titie={
-        github.bio && (
-          <>
-            <Icon type="github" className="mr10" />
-            {github.bio}
-          </>
-        )
-      }
       content={
         <div className="popover-content">
-          <Href href={github.html_url} className="popover-cotent-avatar">
-            <AvatarComponent role={role} github={github} />
-          </Href>
           <ul className="github-info">
             <li>
-              {github.name ? (
-                <>
-                  <span className="github-name"> {github.name}</span>
-                  <Text type="secondary">{github.login}</Text>
-                </>
-              ) : (
-                <span className="github-name"> {github.login}</span>
-              )}
-              {github.blog && (
-                <li>
-                  <Href href={github.blog}>
-                    <SvgIcon type="iconblog2" className="mr10" />
-                    <span>{github.blog}</span>
-                  </Href>
-                </li>
-              )}
-              {github.location && (
-                <li>
-                  <SvgIcon type="iconlocation" className="mr10" />
-                  {github.location}
-                </li>
-              )}
+              <span className="github-name"> {name}</span>
             </li>
           </ul>
         </div>
       }
     >
-      <AvatarComponent role={role} github={github} username={username} />
-      <span />
+      <AvatarComponent headUrl={headUrl} name={name} />
     </Popover>
   );
 };

@@ -24,7 +24,17 @@ function GoodsManage(props) {
     columns: [
       { title: '商品id', dataIndex: 'id' },
       { title: '商品名称', dataIndex: 'name' },
-      { title: '商品图片', dataIndex: 'logoUrl' },
+      {
+        title: '商品图片',
+        dataIndex: 'logoUrl',
+        render: (text, record) => {
+          return text && text.indexOf('http') ? (
+            <span></span>
+          ) : (
+            <img alt={record.name} src={text} style={{ width: 50, height: 50 }} />
+          );
+        },
+      },
       { title: '商品简介', dataIndex: 'introduce' },
       { title: '商品数量', dataIndex: 'restNum' },
       { title: '商品价格', dataIndex: 'price' },
@@ -55,7 +65,7 @@ function GoodsManage(props) {
                 title="确定删除？"
                 onConfirm={(e) =>
                   updateList(() =>
-                    $axios.delete(`/adm/token/GosUser/delete/${record.id}`, { needCheck: true })
+                    $axios.delete(`/adm/token/GosGoods/delete/${record.id}`, { needCheck: true })
                   )
                 }
               >
@@ -79,11 +89,16 @@ function GoodsManage(props) {
     props.form.validateFields((err, values) => {
       console.log(values);
       if (!err) {
+        let param = values;
         if (Array.isArray(values.createdTime)) {
-          values.createdTime = values.createdTime.map((m) => m.format('YYYY-MM-DD'));
+          values.createdTime = values.createdTime.map((m) => m.format('YYYY-MM-DD HH:mm:ss'));
+          param.startTime = values.createdTime[0];
+          param.endTime = values.createdTime[1];
+          delete param.createdTime;
         }
-        setQueryParams({ ...queryParams, ...values });
-        onSearch({ ...queryParams, ...values });
+        delete param.createdTime;
+        setQueryParams({ ...queryParams, ...param });
+        onSearch({ ...queryParams, ...param });
       }
     });
   }
@@ -93,11 +108,11 @@ function GoodsManage(props) {
       {/* 检索 */}
       <Form layout="inline" onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
         <Form.Item label="商品名">
-          {getFieldDecorator('keyword')(<Input placeholder="请输入文章关键词" allowClear />)}
+          {getFieldDecorator('keyword')(<Input placeholder="请输入商品名" allowClear />)}
         </Form.Item>
 
         <Form.Item label="创建日期">
-          {getFieldDecorator('createdTime')(<DatePicker.RangePicker locale={locale} />)}
+          {getFieldDecorator('createdTime')(<DatePicker.RangePicker showTime locale={locale} />)}
         </Form.Item>
 
         <Form.Item>

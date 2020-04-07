@@ -11,7 +11,7 @@ export default [
   },
   {
     icon: 'user',
-    title: '关于',
-    link: '/about'
+    title: '我的订单',
+    link: '/order'
   }
 ]

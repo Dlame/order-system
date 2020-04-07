@@ -7,7 +7,7 @@ import 'moment/locale/zh-cn';
 
 function RiderModal(props) {
   const { modalType, record, visible } = props;
-  const { getFieldDecorator } = props.form;
+  const { getFieldDecorator, setFieldsValue } = props.form;
   // 表单样式
   const formItemLayout = {
     labelCol: {
@@ -30,19 +30,23 @@ function RiderModal(props) {
     { value: 5, label: '江岸区谌家矶' },
   ];
 
-  // 骑手状态
-  const riderStatusList = [
-    { value: 0, label: '等待接单' },
-    { value: 1, label: '正在派送' },
-    { value: 2, label: '停止接单' },
-  ];
   useEffect(() => {
     if (modalType === '编辑') {
-      let initValue = {};
+      let initValue = {
+        id: '',
+        name: '',
+        loginEmail: '',
+        phone: '',
+        headUrl: '',
+        addressStreet: '',
+        remark: '',
+      };
       for (const key in record) {
-        initValue[key] = {
-          value: record[key],
-        };
+        if (initValue.hasOwnProperty(key)) {
+          initValue[key] = {
+            value: record[key],
+          };
+        }
       }
       props.form.setFields(initValue);
     } else {
@@ -105,17 +109,7 @@ function RiderModal(props) {
           <Form.Item label="骑手头像">
             {getFieldDecorator('headUrl', {
               rules: [{ required: true, message: '请填入骑手头像' }],
-            })(<ImageUploader />)}
-          </Form.Item>
-          <Form.Item label="历史接单量">
-            {getFieldDecorator('historyOrders', {
-              rules: [{ required: true, message: '请填入历史接单量' }],
-            })(<Input placeholder="请输入历史接单量" />)}
-          </Form.Item>
-          <Form.Item label="历史接单收益">
-            {getFieldDecorator('historyIncome', {
-              rules: [{ required: true, message: '请填入历史接单收益' }],
-            })(<Input placeholder="请输入历史接单收益" />)}
+            })(<ImageUploader onChange={setFieldsValue} />)}
           </Form.Item>
           <Form.Item label="管辖街道">
             {getFieldDecorator('addressStreet', {
@@ -130,29 +124,6 @@ function RiderModal(props) {
               </Select>
             )}
           </Form.Item>
-          <Form.Item label="骑手状态">
-            {getFieldDecorator('riderStatus', {
-              rules: [{ required: true, message: '请填入历史骑手状态' }],
-            })(
-              <Select style={{ width: 200 }} allowClear>
-                {riderStatusList.map((item) => (
-                  <Select.Option key={item.value} value={item.value}>
-                    {item.label}
-                  </Select.Option>
-                ))}
-              </Select>
-            )}
-          </Form.Item>
-          {modalType === '编辑' && (
-            <>
-              <Form.Item label="创建时间">
-                {getFieldDecorator('createTime')(<Input disabled />)}
-              </Form.Item>
-              <Form.Item label="修改时间">
-                {getFieldDecorator('updateTime')(<Input disabled />)}
-              </Form.Item>
-            </>
-          )}
           <Form.Item label="备注">
             {getFieldDecorator('remark')(<Input placeholder="请输入备注" />)}
           </Form.Item>
