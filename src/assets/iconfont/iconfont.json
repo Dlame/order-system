@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "446610",
+      "name": "销量",
+      "font_class": "xiaoliang",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
       "icon_id": "791889",
       "name": "商品",
       "font_class": "goods-copy",
@@ -20,11 +27,25 @@
       "unicode_decimal": 58948
     },
     {
+      "icon_id": "1020668",
+      "name": "零售价",
+      "font_class": "retail",
+      "unicode": "e6e5",
+      "unicode_decimal": 59109
+    },
+    {
       "icon_id": "1380045",
       "name": "外卖",
       "font_class": "icon-test",
       "unicode": "e622",
       "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "7413995",
+      "name": "库存清单",
+      "font_class": "kucunqingdan",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
     },
     {
       "icon_id": "7843309",

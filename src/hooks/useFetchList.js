@@ -21,7 +21,7 @@ export default function useFetchList({
 }) {
   const [dataList, setDataList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 });
+  const [pagination, setPagination] = useState({ current: 1, size: 10, total: 0 });
 
   const location = useLocation();
   const history = useHistory();
@@ -47,19 +47,19 @@ export default function useFetchList({
   function fetchDataList(params) {
     const requestParams = {
       page: parseInt(pagination.current),
-      pageSize: parseInt(pagination.pageSize),
+      size: parseInt(pagination.size),
       ...queryParams,
       ...params,
     };
 
     $axios
-      .get(requestUrl, { params: requestParams })
+      .post(requestUrl, { params: requestParams })
       .then(res => {
-        pagination.total = res.count;
+        pagination.total = res.totalSize;
         pagination.current = parseInt(requestParams.page);
-        pagination.pageSize = parseInt(requestParams.pageSize);
+        pagination.size = parseInt(requestParams.size);
         setPagination({ ...pagination });
-        setDataList(res.rows);
+        setDataList(res.data);
         withLoading && setLoading(false);
       })
       .catch(e => withLoading && setLoading(false));

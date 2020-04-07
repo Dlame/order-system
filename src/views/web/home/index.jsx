@@ -1,136 +1,144 @@
 import React, { useState } from 'react';
 import './index.less';
 
-import { Link } from 'react-router-dom';
-import { useMediaQuery } from 'react-responsive';
-import { decodeQuery } from '@/utils';
+// import { Link } from 'react-router-dom';
+// import { useMediaQuery } from 'react-responsive';
+// import { decodeQuery } from '@/utils';
 
 // components
-import { Icon, Divider, Empty, Drawer, Spin } from 'antd';
+import { Spin, Button, Modal, InputNumber, message } from 'antd';
 import Pagination from '@/components/Pagination';
-// import ArticleTag from '@/components/ArticleTag';
 import SvgIcon from '@/components/SvgIcon';
 
 // hooks
 import useFetchList from '@/hooks/useFetchList';
 
-function Preview({ list, showTitle = true }) {
-  return (
-    <ul className="preview">
-      {showTitle && <Divider>文章列表</Divider>}
-      {list.map(item => (
-        <li key={item.id}>
-          <Link to={`/article/${item.id}`}>{item.title}</Link>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function NoDataDesc({ keyword }) {
-  return keyword ? (
-    <span>
-      不存在标题/内容中含有 <span className="keyword">{keyword}</span> 的文章！
-    </span>
-  ) : (
-    <span>暂无数据...</span>
-  );
-}
+// redux
+import { useDispatch } from 'react-redux';
+import { addToCart } from '@/redux/cart/action';
 
 function Home(props) {
-  const [drawerVisible, setDrawerVisible] = useState(false);
-  const { loading, pagination, dataList } = useFetchList({
-    requestUrl: '/article',
-    queryParams: { pageSize: 10 },
-    fetchDependence: [props.location.search],
-  });
+	const [visible, setVisible] = useState(false);
+	const [goods, setGoods] = useState({});
+	const [count, setCount] = useState(0);
+	const { loading, pagination, dataList } = useFetchList({
+		requestUrl: '/api/GosGoods/query',
+		queryParams: {},
+		fetchDependence: [props.location.search]
+	});
 
-  const list = [...dataList].map(item => {
-    // const index = item.content.indexOf('<!--more-->');
-    return item;
-  });
+	const dispatch = useDispatch(); // dispatch hooks
 
-  const isGreaterThan1300 = useMediaQuery({
-    query: '(min-width: 1300px)',
-  });
+	// const { keyword } = decodeQuery(props.location.search);
 
-  // 跳转到文章详情
-  function jumpTo(id) {
-    props.history.push(`/article/${id}`);
-  }
+	function showModal(goods) {
+		setVisible(true);
+		setGoods(goods);
+	}
 
-  const { keyword } = decodeQuery(props.location.search);
+	function addtoCart() {
+		if (count <= 0) {
+			message.warn('请先选择商品数量');
+			return;
+		}
+		let payload = { ...goods, count };
+		dispatch(addToCart(payload));
+		setVisible(false);
+		setGoods({});
+	}
 
-  return (
-    <Spin tip="Loading..." spinning={loading}>
-      <div className="app-home">
-        <ul className="app-home-list">
-          {list.map(item => (
-            <li className="app-home-list-item" key={item.id}>
-              <Divider orientation="left">
-                <span className="title" onClick={() => jumpTo(item.id)}>
-                  {item.title}
-                </span>
-                <span className="posted-time">{item.createTime.slice(0, 10)}</span>
-              </Divider>
-              <div
-                className="article-detail content"
-                dangerouslySetInnerHTML={{ __html: item.content }}
-              ></div>
-              <div className="list-item-others">
-                <SvgIcon className="iconcomment" />
-                <span style={{ marginRight: 5 }}> {item.count}</span>
+	const img = require('../../../assets/image/timg.jpg');
 
-                <SvgIcon type="iconview" style={{ marginRight: 5 }} />
-                <span>{item.viewCount}</span>
+	return (
+		<Spin tip="Loading..." spinning={loading}>
+			<div className="app-home">
+				<ul className="app-home-list">
+					{dataList.map(item => (
+						<li className="app-home-list-item" key={item.id}>
+							<div className="article-detail img">
+								<img alt={item.name} src={img} />
+							</div>
+							<div className="article-detail price">
+								<span>￥</span>
+								{item.price}
+							</div>
 
-                {/* <ArticleTag tagList={item.tags} categoryList={item.categories} /> */}
-              </div>
-            </li>
-          ))}
-        </ul>
-        {list.length > 0 ? (
-          <>
-            {isGreaterThan1300 ? (
-              <Preview list={list} />
-            ) : (
-              <>
-                <div className="drawer-btn" onClick={e => setDrawerVisible(true)}>
-                  <Icon type="menu-o" className="nav-phone-icon" />
-                </div>
-                <Drawer
-                  title="文章列表"
-                  placement="right"
-                  closable={false}
-                  onClose={e => setDrawerVisible(false)}
-                  visible={drawerVisible}
-                  getContainer={() => document.querySelector('.app-home')}
-                >
-                  <Preview list={list} showTitle={false} />
-                </Drawer>
-              </>
-            )}
-          </>
-        ) : (
-          <>
-            {keyword && (
-              <div className="no-data">
-                <Empty description={<NoDataDesc keyword={keyword} />} />
-              </div>
-            )}
-          </>
-        )}
+							<div className="title">
+								{item.name} <span className="posted-time">{item.shopName}</span>
+							</div>
+							<div
+								className="article-detail content"
+								dangerouslySetInnerHTML={{ __html: item.introduce }}
+							></div>
+							<Button
+								type="danger"
+								className="list-item-others btn"
+								onClick={() => showModal(item)}
+							>
+								加入购物车
+							</Button>
+						</li>
+					))}
+				</ul>
 
-        <Pagination
-          {...pagination}
-          onChange={page => {
-            document.querySelector('.app-main').scrollTop = 0;
-            pagination.onChange(page);
-          }}
-        />
-      </div>
-    </Spin>
-  );
+				<Modal
+					width={460}
+					title="添加购物车"
+					visible={visible}
+					// onOk={e => onCreate(e)}
+					okText="确定"
+					cancelText="取消"
+					footer={[
+						<InputNumber
+							className="modal-inputnum"
+							min={0}
+							max={goods.restNum}
+							key={new Date()}
+							value={count}
+							onChange={value => setCount(value)}
+							placeholder="请选择数量"
+						/>,
+						<Button key="back" onClick={e => setVisible(false)}>
+							取消
+						</Button>,
+						<Button key="submit" type="danger" onClick={() => addtoCart()}>
+							添加
+						</Button>
+					]}
+				>
+					<div className="modal-img">
+						<img alt={goods.name} src={img} />
+					</div>
+					<div className="modal-price">
+						<span>￥</span>
+						{goods.price}
+					</div>
+
+					<div className="midal-title">
+						{goods.name} <span className="posted-time">{goods.shopName}</span>
+					</div>
+					<div
+						className="modal-content"
+						dangerouslySetInnerHTML={{ __html: goods.introduce }}
+					></div>
+					<div className="modal-icons">
+						<SvgIcon type="icon-xiaoliang" style={{ marginRight: 5 }} />
+						<span style={{ marginRight: 10 }}> 销量：{goods.costs}</span>
+						<SvgIcon type="icon-kucunqingdan" style={{ marginRight: 5 }} />
+						<span style={{ marginRight: 10 }}> 库存：{goods.restNum}</span>
+					</div>
+				</Modal>
+
+				<Pagination
+					{...pagination}
+					onChange={page => {
+						document.querySelector('.app-main').scrollTop = 0;
+						pagination.onChange(page);
+					}}
+				/>
+			</div>
+		</Spin>
+	);
 }
 
 export default Home;
