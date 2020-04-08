@@ -131,6 +131,12 @@ function RiderManage(props) {
     });
   }
 
+  function onCancel() {
+    setTimeout(() => {
+      updateList(() => setVisible(false));
+    }, 500);
+  }
+
   return (
     <>
       {/* 检索 */}
@@ -181,7 +187,7 @@ function RiderManage(props) {
         modalType={modalType}
         visible={visible}
         record={record}
-        onCancel={() => setVisible(false)}
+        onCancel={() => onCancel()}
       />
     </>
   );

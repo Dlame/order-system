@@ -28,7 +28,7 @@ const orderStatusList = [
 	{ value: 3, label: '正在派送' },
 	{ value: 4, label: '订单完成' },
 	{ value: 5, label: '支付失败' },
-	{ value: 5, label: '订单取消' }
+	{ value: 6, label: '订单取消' }
 ];
 
 function RiderManage(props) {
@@ -82,7 +82,7 @@ function RiderManage(props) {
 					if (record.orderStatus === 0) {
 						return <a onClick={() => payMethod(record)}>立即支付</a>;
 					}
-					if (record.riderId && record.orderStatus !== 4) {
+					if (record.riderId && record.orderStatus === 3) {
 						return (
 							<Popconfirm
 								title="是否确认订单？"

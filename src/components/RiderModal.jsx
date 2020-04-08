@@ -70,6 +70,7 @@ function RiderModal(props) {
           console.log(res);
         });
       }
+      props.onCancel();
     });
   }
 

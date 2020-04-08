@@ -1,28 +1,42 @@
-import React, { useState } from 'react';
+import React from 'react';
 import useMount from '@/hooks/useMount';
+import { useLocation, useHistory } from 'react-router-dom';
 
-import { Modal, Row, Col } from 'antd';
+import { Modal } from 'antd';
 
+import { decodeQuery } from '@/utils';
 import { $axios } from '@/utils/interceptor';
 
-function GainOrder() {
-	const [visible, setVisible] = useState(true);
-	const [order, setOrder] = useState({});
-	useMount(() => {
-		document.title = '订单确认';
-		$axios.post('/adm/token/GosOrder/query', { id: '1247554111726030848' }).then(res => {
-      console.log(res);
+function GainOrder(props) {
+  const location = useLocation();
+  const history = useHistory();
+  useMount(() => {
+    document.title = '订单确认';
+    const { oid, rid } = decodeQuery(location.search);
+    Modal.confirm({
+      title: '',
+      content: '是否确认配送？',
+      mask: true,
+      maskClosable: false,
+      okText: '确认',
+      cancelText: '取消',
+      onOk: () => {
+        return new Promise((resolve, reject) => {
+          $axios
+            .get(`/api/reorder/${oid}/${rid}`)
+            .then((res) => {
+              resolve();
+              history.push('/');
+            })
+            .catch((err) => {
+              reject();
+            });
+        });
+      },
     });
-	});
+  });
 
-	return (
-		<Modal closable={false} mask maskClosable={false} visible={visible}>
-			<Row>
-				<Col span={6}></Col>
-				<Col span={18}></Col>
-			</Row>
-		</Modal>
-	);
+  return <></>;
 }
 
 export default GainOrder;

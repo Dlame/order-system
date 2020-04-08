@@ -59,6 +59,7 @@ function CreateUser(props) {
           console.log(res);
         });
       }
+      props.onCancel();
     });
   }
 

@@ -87,7 +87,6 @@ function GoodsManage(props) {
   function handleSubmit(e) {
     e.preventDefault();
     props.form.validateFields((err, values) => {
-      console.log(values);
       if (!err) {
         let param = values;
         if (Array.isArray(values.createdTime)) {
@@ -101,6 +100,12 @@ function GoodsManage(props) {
         onSearch({ ...queryParams, ...param });
       }
     });
+  }
+
+  function onCancel() {
+    setTimeout(() => {
+      updateList(() => setVisible(false));
+    }, 500);
   }
 
   return (
@@ -131,7 +136,7 @@ function GoodsManage(props) {
         modalType={modalType}
         visible={visible}
         record={record}
-        onCancel={() => setVisible(false)}
+        onCancel={() => onCancel()}
       />
     </>
   );
