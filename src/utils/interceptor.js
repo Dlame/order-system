@@ -5,15 +5,20 @@ import { get } from '../utils/storage';
 
 axios.defaults.timeout = 10000; // 设置超时时间
 axios.defaults.showLoading = false; // 设置请求是否loading
-axios.defaults.needCheck = false; // 默认请求不携带aoken
+axios.defaults.adminCheck = false; // 默认请求不携带aoken
+axios.defaults.userCheck = false; // 默认请求不携带aoken
 
 function createInterceptor(instance) {
   instance.interceptors.request.use(
     function (config) {
       const adminInfo = get('adminInfo');
-      if (config.needCheck && adminInfo.token) {
+      if (config.adminCheck && adminInfo.token) {
         config.headers.token = adminInfo.token;
       }
+      // const userInfo = get('userInfo');
+      // if (config.userCheck && userInfo.token){
+      //   config.headers.token = userInfo.token;
+      // }
       // Do something before request is sent
       return config;
     },

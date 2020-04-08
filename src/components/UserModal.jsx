@@ -49,12 +49,12 @@ function CreateUser(props) {
     props.form.validateFieldsAndScroll((errors, values) => {
       if (errors) return;
       if (modalType === '编辑') {
-        $axios.put('/adm/token/GosUser/update', values, { needCheck: true }).then((res) => {
+        $axios.put('/adm/token/GosUser/update', values, { adminCheck: true }).then((res) => {
           message.info(res.desc);
           console.log(res);
         });
       } else {
-        $axios.post('/adm/token/GosUser/save', values, { needCheck: true }).then((res) => {
+        $axios.post('/adm/token/GosUser/save', values, { adminCheck: true }).then((res) => {
           message.info(res.desc);
           console.log(res);
         });

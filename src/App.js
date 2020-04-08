@@ -8,7 +8,7 @@ import routes from './routes';
 
 function App() {
   const adminToken = useSelector((state) => state.admin.token);
-  const userToken = useSelector((state) => state.user.token);
+  // const userToken = useSelector((state) => state.user.token);
 
   const renderRoutes = (routes, contextPath) => {
     const children = [];
@@ -25,16 +25,16 @@ function App() {
         };
       }
       // 未登录
-      if (
-        (newContextPath.includes('orders') || newContextPath.includes('shoppingCart')) &&
-        !userToken
-      ) {
-        item = {
-          ...item,
-          component: () => <Redirect to="/" />,
-          children: [],
-        };
-      }
+      // if (
+      //   (newContextPath.includes('myorder') || newContextPath.includes('shoppingCart')) &&
+      //   !userToken
+      // ) {
+      //   item = {
+      //     ...item,
+      //     component: () => <Redirect to="/" />,
+      //     children: [],
+      //   };
+      // }
 
       if (item.component) {
         if (item.childRoutes) {

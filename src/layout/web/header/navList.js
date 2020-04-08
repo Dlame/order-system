@@ -12,6 +12,6 @@ export default [
   {
     icon: 'user',
     title: '我的订单',
-    link: '/order'
+    link: '/myorder'
   }
 ]

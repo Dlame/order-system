@@ -23,7 +23,6 @@ export default function shopCar(state = initState, action) {
         cart: state.cart.map((item) => (item.id === payload.id ? payload : item)),
       };
     case CART_REMOVE:
-      message.success('删除成功');
       return {
         ...state,
         cart: state.cart.filter((item) => item.id !== payload),

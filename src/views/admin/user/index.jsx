@@ -63,7 +63,7 @@ function UserManage(props) {
                 title="确定删除？"
                 onConfirm={(e) =>
                   updateList(() =>
-                    $axios.delete(`/adm/token/GosUser/delete/${record.id}`, { needCheck: true })
+                    $axios.delete(`/adm/token/GosUser/delete/${record.id}`, { adminCheck: true })
                   )
                 }
               >

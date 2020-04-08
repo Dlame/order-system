@@ -4,15 +4,13 @@
 	@previewWidth: 300px;
 	.app-home-list {
 		margin: 0 auto;
-		width: calc(100% - @previewWidth);
 		display: flex;
 		flex-wrap: wrap;
 		&-item {
 			position: relative;
 			border: 1px solid #ebedf0;
 			padding: 16px 24px;
-			margin-bottom: 20px;
-			margin-right: 20px;
+			min-height: 520px;
 			transition: all 0.2s linear;
 			&:hover {
 				background: #effbff;
@@ -46,6 +44,7 @@
 				font-size: 0.5em;
 			}
 			.img {
+				height: 320px;
 				img {
 					display: block;
 					margin: 0 auto;

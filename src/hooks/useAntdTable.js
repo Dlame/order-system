@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { $axios } from '../utils/interceptor';
 import useMount from './useMount';
+import { useSelector } from 'react-redux';
 
 /**
  * useAntdTable hooks 用于处理 loading 逻辑以及换页 检索等
@@ -15,10 +16,13 @@ export default function useAntdTable({
   queryParams = null,
   columns = [],
   isAdmin = true,
+  adminCheck = false,
+  userCheck = false
 }) {
   const [loading, setLoading] = useState(false);
   const [dataList, setDataList] = useState([]);
   const [tablePagination, setTablePagination] = useState({ current: 1, pageSize: 10, totoal: 0 });
+  const userId = useSelector(state => state.user.userId);
 
   useMount(fetchListWithLoading);
 
@@ -30,8 +34,12 @@ export default function useAntdTable({
       ...params,
     };
 
+    if(userCheck){
+      requestParams.userId = userId
+    }
+
     $axios
-      .post(requestUrl, { params: requestParams }, { needCheck: true })
+      .post(requestUrl, { params: requestParams }, { adminCheck })
       .then((res) => {
         const { data, totalSize, currentPage } = res;
 

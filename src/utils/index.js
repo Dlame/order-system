@@ -60,3 +60,21 @@ export function accMul(arg1, arg2) {
   } catch (e) {}
   return (Number(s1.replace('.', '')) * Number(s2.replace('.', ''))) / Math.pow(10, m);
 }
+/**
+* 精确加法
+*/
+export function accAdd(a, b) {
+  var c, d, e;
+  try {
+    c = a.toString().split(".")[1].length;
+  } catch (f) {
+    c = 0;
+  }
+  try {
+    d = b.toString().split(".")[1].length;
+  } catch (f) {
+    d = 0;
+  }
+  // eslint-disable-next-line
+  return e = Math.pow(10, Math.max(c, d)), (accMul(a, e) + accMul(b, e)) / e;
+}

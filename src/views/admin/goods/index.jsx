@@ -65,7 +65,7 @@ function GoodsManage(props) {
                 title="确定删除？"
                 onConfirm={(e) =>
                   updateList(() =>
-                    $axios.delete(`/adm/token/GosGoods/delete/${record.id}`, { needCheck: true })
+                    $axios.delete(`/adm/token/GosGoods/delete/${record.id}`, { adminCheck: true })
                   )
                 }
               >

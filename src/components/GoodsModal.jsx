@@ -51,12 +51,12 @@ function GoodsModal(props) {
     props.form.validateFieldsAndScroll((errors, values) => {
       if (errors) return;
       if (modalType === '编辑') {
-        $axios.put('/adm/token/GosGoods/update', values, { needCheck: true }).then((res) => {
+        $axios.put('/adm/token/GosGoods/update', values, { adminCheck: true }).then((res) => {
           message.info(res.desc);
           console.log(res);
         });
       } else {
-        $axios.post('/adm/token/GosGoods/save', values, { needCheck: true }).then((res) => {
+        $axios.post('/adm/token/GosGoods/save', values, { adminCheck: true }).then((res) => {
           message.info(res.desc);
           console.log(res);
         });
