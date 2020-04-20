@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Input, Form, Button, Popconfirm, DatePicker, Divider } from 'antd';
+import { Table, Input, Form, Button, Popconfirm, DatePicker, Divider, message } from 'antd';
 import GoodsModal from '@/components/GoodsModal';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 
@@ -65,7 +65,12 @@ function GoodsManage(props) {
                 title="确定删除？"
                 onConfirm={(e) =>
                   updateList(() =>
-                    $axios.delete(`/adm/token/GosGoods/delete/${record.id}`, { adminCheck: true })
+                    $axios.delete(`/adm/token/GosGoods/delete/${record.id}`, { adminCheck: true }).then(res=>{
+                      if (res.code !== 200) {
+                        message.error(res.desc);
+                        return;
+                      }
+                    })
                   )
                 }
               >
@@ -76,6 +81,7 @@ function GoodsManage(props) {
         },
       },
     ],
+    adminCheck: true
   });
 
   function showModal(type, visible, record) {
@@ -113,7 +119,7 @@ function GoodsManage(props) {
       {/* 检索 */}
       <Form layout="inline" onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
         <Form.Item label="商品名">
-          {getFieldDecorator('keyword')(<Input placeholder="请输入商品名" allowClear />)}
+          {getFieldDecorator('name')(<Input placeholder="请输入商品名" allowClear />)}
         </Form.Item>
 
         <Form.Item label="创建日期">

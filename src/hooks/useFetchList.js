@@ -18,6 +18,7 @@ export default function useFetchList({
   queryParams = null,
   withLoading = true,
   fetchDependence = [],
+  userCheck = false
 }) {
   const [dataList, setDataList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -53,7 +54,7 @@ export default function useFetchList({
     };
 
     $axios
-      .post(requestUrl, { params: requestParams })
+      .post(requestUrl, requestParams, {userCheck})
       .then(res => {
         pagination.total = res.totalSize;
         pagination.current = parseInt(requestParams.page);

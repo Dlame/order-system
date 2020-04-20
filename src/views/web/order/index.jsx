@@ -33,10 +33,10 @@ const orderStatusList = [
 
 function RiderManage(props) {
 	useBreadcrumb(['订单管理']);
-	const userId = useSelector(state => state.user.userId);
+	const user = useSelector(state => state.user);
 
 	useMount(() => {
-		if (!userId) {
+		if (!user.userId) {
 			message.warn('请点击右上角登录后再查看');
 			props.history.replace('/');
 		}
@@ -91,7 +91,7 @@ function RiderManage(props) {
 										$axios
 											.post(`/api/token/GosOrder/confirm`, {
 												id: record.id,
-												userId: userId,
+												userId: user.userId,
 												riderId: record.riderId
 											})
 											.then(res => {
@@ -128,6 +128,8 @@ function RiderManage(props) {
 			<input name="totalPrice" type="number" value="${order.totalPrice}" />
 			街道编号：
 			<input name="addressStreet" type="number" value="${order.addressStreet}" />
+			token：
+			<input name="token" type="text" value="${user.token}" />
 			<input type="submit" value="提交" />
 		</form>
 		`;

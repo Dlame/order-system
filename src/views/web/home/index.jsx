@@ -27,7 +27,8 @@ function Home(props) {
 	const { loading, pagination, dataList } = useFetchList({
 		requestUrl: '/api/GosGoods/query',
 		queryParams: {},
-		fetchDependence: [props.location.search]
+		fetchDependence: [props.location.search],
+		userCheck: true
 	});
 
 	const dispatch = useDispatch(); // dispatch hooks

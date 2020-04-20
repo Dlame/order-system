@@ -52,13 +52,19 @@ function GoodsModal(props) {
       if (errors) return;
       if (modalType === '编辑') {
         $axios.put('/adm/token/GosGoods/update', values, { adminCheck: true }).then((res) => {
+          if (res.code !== 200) {
+					message.error(res.desc);
+					return;
+				}
           message.info(res.desc);
-          console.log(res);
         });
       } else {
         $axios.post('/adm/token/GosGoods/save', values, { adminCheck: true }).then((res) => {
+          if (res.code !== 200) {
+            message.error(res.desc);
+            return;
+          }
           message.info(res.desc);
-          console.log(res);
         });
       }
       props.onCancel();

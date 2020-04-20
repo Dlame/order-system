@@ -5,6 +5,10 @@ import { $axios } from '@/utils/interceptor';
 export const login = (params) => {
   return (dispatch) =>
     $axios.post('/api/login', params).then((res) => {
+      if (res.code !== 200) {
+        message.error(res.desc);
+        return;
+      }
       let data = res.data;
       dispatch({
         type: USER_LOGIN,
@@ -17,6 +21,10 @@ export const login = (params) => {
 export const register = (params) => {
   return (dispatch) =>
     $axios.post('/api/register', params).then((res) => {
+      if (res.code !== 200) {
+        message.error(res.desc);
+        return;
+      }
       message.success('注册成功，请重新登录您的账号！');
     });
 };

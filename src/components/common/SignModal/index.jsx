@@ -54,8 +54,12 @@ function SignModal(props) {
     $axios
       .post('/api/sendLoginMail', { to: value })
       .then((res) => {
-        message.success('发送成功');
         setLiading(false);
+        if (res.code !== 200) {
+					message.error(res.desc);
+					return;
+				}
+        message.success('发送成功');
       })
       .catch((err) => {
         setLiading(false);

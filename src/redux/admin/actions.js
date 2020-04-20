@@ -5,6 +5,10 @@ import { $axios } from '@/utils/interceptor';
 export const login = (params, callback) => {
 	return dispatch =>
 		$axios.post('/adm/login', params).then(res => {
+			if (res.code !== 200) {
+				message.error(res.desc);
+				return;
+			}
 			dispatch({
 				type: USER_LOGIN,
 				payload: res

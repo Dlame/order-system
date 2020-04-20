@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Input, Form, Button, Popconfirm, DatePicker, Divider } from 'antd';
+import { Table, Input, Form, Button, Popconfirm, DatePicker, Divider, message } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import UserModal from '@/components/UserModal';
 
@@ -63,7 +63,12 @@ function UserManage(props) {
                 title="确定删除？"
                 onConfirm={(e) =>
                   updateList(() =>
-                    $axios.delete(`/adm/token/GosUser/delete/${record.id}`, { adminCheck: true })
+                    $axios.delete(`/adm/token/GosUser/delete/${record.id}`, { adminCheck: true }).then(res=>{
+                      if (res.code !== 200) {
+                        message.error(res.desc);
+                        return;
+                      }
+                    })
                   )
                 }
               >
@@ -74,6 +79,7 @@ function UserManage(props) {
         },
       },
     ],
+    adminCheck: true
   });
 
   function showModal(type, visible, record) {

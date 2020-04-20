@@ -78,7 +78,8 @@ function RiderManage(props) {
 				//   </Popconfirm>
 				// ),
 			}
-		]
+		],
+		adminCheck: true
 	});
 
 	function handleSubmit(e) {

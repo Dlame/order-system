@@ -39,7 +39,7 @@ export default function useAntdTable({
     }
 
     $axios
-      .post(requestUrl, { params: requestParams }, { adminCheck })
+      .post(requestUrl, requestParams, { adminCheck, userCheck })
       .then((res) => {
         const { data, totalSize, currentPage } = res;
 

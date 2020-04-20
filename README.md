@@ -1,68 +1,58 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 项目介绍
+  使用react为框架进行搭建，使用的redux、react-router-dom等，使用了antd作为ui框架，axios、less等热门插件
+  建议使用chrome浏览器或者360极速浏览器极速模式运行
 
-## Available Scripts
+## 环境安装
+1. [点击下载node.js](https://nodejs.org/en/)
+2. [点击下载yarn](https://yarn.bootcss.com/)
+安装完成后重启电脑
 
-In the project directory, you can run:
-
-### `yarn start`
-
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## 运行项目
+打开cmd或者powershell进入package.json所在文件夹
+### 按顺序输入如下命令
+	1.安装环境
+		yarn
+	2.运行项目
+		yarn start
+	3.打包项目
+		yarn build
+		
+## 项目结构
+仅展示src目录
+src
+    ├─assets				// 资源
+    │  ├─iconfont			// icon字体
+    │  └─image				// 图片
+    ├─components			// 组件
+    │  ├─Avatar				// 头像组件
+    │  └─common				// 公共组件
+    │      └─SignModal		// 弹框（登陆，注册）
+    ├─hooks					// hooks 包含table和list封装
+    ├─layout				// 布局
+    │  ├─admin				// 后台布局
+    │  │  ├─header			// 头部组件
+    │  │  └─sidebar			// 左侧菜单组件
+    │  └─web				// 前台布局
+    │      └─header			// 头部组件
+    │          ├─left		// 头部左侧
+    │          └─right		// 头部右侧
+    ├─redux					// redux
+    │  ├─admin				
+    │  ├─cart
+    │  └─user
+    ├─routes
+    │  └─modules
+    ├─styles
+    ├─utils					// 包含请求拦截器，公共工具方法
+    └─views
+        ├─admin
+        │  ├─goods			// 商品
+        │  ├─home			// 主页
+        │  ├─order			// 订单
+        │  ├─rider			// 骑手
+        │  └─user			// 用户
+        ├─others			// 其他界面（登陆，骑手确认）
+        └─web
+            ├─cart			// 购物车
+            ├─home			// 主页
+            └─order			// 订单

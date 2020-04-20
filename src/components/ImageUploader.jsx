@@ -46,6 +46,10 @@ class ImageUploader extends Component {
     let formdata = new FormData();
     formdata.append('file', data.file);
     $axios.post('/upload/img', formdata).then((res) => {
+      if (res.code !== 200) {
+        message.error(res.desc);
+        return;
+      }
       message.success('上传成功');
       this.setState({
         imageUrl: res.data,

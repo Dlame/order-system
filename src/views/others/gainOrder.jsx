@@ -2,7 +2,7 @@ import React from 'react';
 import useMount from '@/hooks/useMount';
 import { useLocation, useHistory } from 'react-router-dom';
 
-import { Modal } from 'antd';
+import { Modal,message } from 'antd';
 
 import { decodeQuery } from '@/utils';
 import { $axios } from '@/utils/interceptor';
@@ -25,6 +25,10 @@ function GainOrder(props) {
           $axios
             .get(`/api/reorder/${oid}/${rid}`)
             .then((res) => {
+              if (res.code !== 200) {
+                message.error(res.desc);
+                return;
+              }
               resolve();
               history.push('/');
             })

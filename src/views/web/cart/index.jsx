@@ -113,7 +113,11 @@ export function Cart(props) {
 			let param = values;
 			param.goodsList = goodsList;
 			param.userId = userId;
-			$axios.post('/api/token/GosOrder/downOrder', param, { adminCheck: true }).then(res => {
+			$axios.post('/api/token/GosOrder/downOrder', param, { userCheck: true }).then(res => {
+				if (res.code !== 200) {
+					message.error(res.desc);
+					return;
+				}
 				message.info('下单成功，请到我的订单中完成支付');
 				setVisible(false);
 				for (let i = 0; i < goodsList.length; i++) {

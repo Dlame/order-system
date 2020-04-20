@@ -50,11 +50,19 @@ function CreateUser(props) {
       if (errors) return;
       if (modalType === '编辑') {
         $axios.put('/adm/token/GosUser/update', values, { adminCheck: true }).then((res) => {
+          if (res.code !== 200) {
+            message.error(res.desc);
+            return;
+          }
           message.info(res.desc);
           console.log(res);
         });
       } else {
         $axios.post('/adm/token/GosUser/save', values, { adminCheck: true }).then((res) => {
+          if (res.code !== 200) {
+					message.error(res.desc);
+					return;
+				}
           message.info(res.desc);
           console.log(res);
         });

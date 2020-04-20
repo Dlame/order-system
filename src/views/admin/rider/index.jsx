@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Table, Input, Form, Button, Popconfirm, DatePicker, Select, Divider } from 'antd';
+import { Table, Input, Form, Button, Popconfirm, DatePicker, Select, Divider, message } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import RiderModal from '@/components/RiderModal';
 
@@ -96,7 +96,12 @@ function RiderManage(props) {
               title="确定删除？"
               onConfirm={(e) =>
                 updateList(() => {
-                  return $axios.delete(`/adm/token/GosRider/delete/${record.id}`);
+                  return $axios.delete(`/adm/token/GosRider/delete/${record.id}`,{ adminCheck: true }).then(res=>{
+                    if (res.code !== 200) {
+                      message.error(res.desc);
+                      return;
+                    }
+                  });
                 })
               }
             >
@@ -106,6 +111,7 @@ function RiderManage(props) {
         ),
       },
     ],
+    adminCheck: true
   });
 
   function showModal(type, visible, record) {
